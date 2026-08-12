@@ -64,7 +64,7 @@ def add_book(request):
             "Book added successfully."
         )
 
-        return redirect("/books")
+        return redirect("/host/books")
 
     return render(
         request,
