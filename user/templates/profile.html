@@ -62,7 +62,7 @@
 
         <div class="profile-stats">
           <div class="stat">
-            <strong> {{ rentals|length }} </strong>
+            <strong> {{ rentals|length  }} </strong>
 
             <span> Total Rentals </span>
           </div>
@@ -71,8 +71,7 @@
 
           <div class="stat">
             <strong>
-              {% for rental in rentals %} {% if not rental.returned %} 1 
-              {%endif %} {% empty %} 0 {% endfor %}
+              {{active}}
             </strong>
 
             <span> Active </span>
@@ -137,7 +136,11 @@
 
               {% if rental.returned %}
 
-              <span class="returned-text"> ✓ Returned </span>
+              <div class="rental-date">
+                <span class="returned-text"> ✓ Returned </span>
+                <strong> {{ rental.return_date|date:"d M Y" }} </strong>
+              </div>
+              
 
               {% else %}
 

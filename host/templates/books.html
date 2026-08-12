@@ -75,19 +75,25 @@
         <a href="/host/books/add/" class="primary-btn"> + Add Book </a>
       </header>
 
-      <section class="toolbar">
+      <form method="GET" action="" class="toolbar">
         <div class="search-box">
           <span>⌕</span>
-
-          <input type="text" placeholder="Search books..." />
+          <input 
+            type="text" 
+            name="search" 
+            placeholder="Search books..." 
+            value="{{ request.GET.search }}"
+          />
         </div>
 
-        <select>
-          <option>All Books</option>
-          <option>Available</option>
-          <option>Rented</option>
+        <select name="status" onchange="this.form.submit()">
+          <option value="">All Books</option>
+          <option value="available" {% if request.GET.status == 'available' %}selected{% endif %}>Available</option>
+          <option value="rented" {% if request.GET.status == 'rented' %}selected{% endif %}>Rented</option>
         </select>
-      </section>
+
+        <button type="submit" style="display: none;"></button>
+      </form>
 
       <section class="table-card">
         <div class="table-header">

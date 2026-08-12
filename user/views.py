@@ -3,6 +3,7 @@ from django.contrib.auth.hashers import make_password ,check_password
 from .models import User,Rental,Book
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.utils import timezone
 
 
 # Create your views here.
@@ -59,6 +60,9 @@ def login(request):
                 request.session["user_id"] = user.id
                 request.session["username"] = user.username
 
+                if user.email == "admin@me.com":
+                    return redirect("/host")
+
                 return redirect("/")
 
             else:
@@ -92,13 +96,15 @@ def profile(request):
     user = User.objects.get(id=request.session["user_id"])
 
     rentals = Rental.objects.filter(user=user).select_related("book")
+    active = rentals.filter(returned=False).count()
 
     return render(
         request,
         "profile.html",
         {
             "user": user,
-            "rentals": rentals
+            "rentals": rentals,
+            "active": active
         }
     )
 
@@ -203,6 +209,7 @@ def return_book(request, id):
         })
 
     rental.returned = True
+    rental.return_date = timezone.now()
     rental.save()
 
     rental.book.available = True

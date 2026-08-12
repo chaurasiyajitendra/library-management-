@@ -4,6 +4,25 @@ from user.models import Book, User, Rental
 from django.db.models import Count
 
 # Create your views here.
+
+def admin_required(view_func):
+    def wrapper(request, *args, **kwargs):
+ 
+        if "user_id" not in request.session:
+            return redirect("/login")
+        
+        try:
+            user = User.objects.get(id=request.session.get("user_id"))
+            if user.email != "admin@me.com":
+                return redirect("/")
+        except User.DoesNotExist:
+            return redirect("/login")
+
+        return view_func(request, *args, **kwargs)
+        
+    return wrapper
+
+@admin_required
 def dashboard(request):
 
     context = {
@@ -21,9 +40,21 @@ def dashboard(request):
         context
     )
 
+@admin_required
 def books(request):
 
     books = Book.objects.all().order_by("-id")
+
+    search_query = request.GET.get('search', '')
+    if search_query:
+        books = books.filter(name__icontains=search_query)
+
+
+    status_filter = request.GET.get('status', '')
+    if status_filter == 'available':
+        books = books.filter(available=True)
+    elif status_filter == 'rented':
+        books = books.filter(available=False)
 
     return render(
         request,
@@ -33,6 +64,9 @@ def books(request):
         }
     )
 
+
+
+@admin_required
 def add_book(request):
 
     if request.method == "POST":
@@ -74,7 +108,7 @@ def add_book(request):
         }
     )
 
-
+@admin_required
 def edit_book(request, id):
 
     try:
@@ -131,7 +165,7 @@ def edit_book(request, id):
         }
     )
 
-
+@admin_required
 def delete_book(request, id):
 
     if request.method != "POST":
@@ -159,7 +193,7 @@ def delete_book(request, id):
 
     return redirect("host_books")
 
-
+@admin_required
 def rentals(request):
 
     rentals = Rental.objects.select_related("user","book").order_by("-id")
@@ -174,10 +208,10 @@ def rentals(request):
         }
     )
 
-
+@admin_required
 def users(request):
 
-    users = User.objects.annotate(rental_count=Count("rentals")).order_by("-id")
+    users = User.objects.exclude(email="admin@me.com").annotate(rental_count=Count("rentals")).order_by("-id")
 
     return render(
         request,
@@ -187,6 +221,7 @@ def users(request):
         }
     )
 
+@admin_required
 def user_detail(request, id):
 
     user = User.objects.get(id=id)
@@ -204,7 +239,7 @@ def user_detail(request, id):
         }
     )
 
-
+@admin_required
 def delete_user(request, id):
 
     if request.method == "POST":

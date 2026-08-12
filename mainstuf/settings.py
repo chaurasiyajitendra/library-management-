@@ -15,9 +15,10 @@ import os
 
 
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY","django-insecure-local-development-key-change-this")
 
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+# DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -128,10 +129,10 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
 
 SECURE_HSTS_SECONDS = 0
