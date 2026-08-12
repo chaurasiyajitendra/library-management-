@@ -1,0 +1,269 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: #f4f1eb;
+}
+
+/* Main Container */
+
+.auth-container {
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 30px;
+}
+
+/* Auth Box */
+
+.auth-box {
+  width: 100%;
+  max-width: 430px;
+
+  background: #ffffff;
+
+  padding: 40px;
+
+  border-radius: 14px;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+/* Logo */
+
+.logo {
+  width: 55px;
+  height: 55px;
+
+  margin: 0 auto 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #2f5d50;
+
+  color: white;
+
+  border-radius: 12px;
+
+  font-size: 26px;
+}
+
+/* Heading */
+
+.auth-box h1 {
+  text-align: center;
+
+  color: #222;
+
+  font-size: 28px;
+
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  text-align: center;
+
+  color: #777;
+
+  font-size: 14px;
+
+  margin-bottom: 30px;
+}
+
+/* Inputs */
+
+.input-group {
+  margin-bottom: 18px;
+}
+
+.input-group label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #333;
+}
+
+.input-group input {
+  width: 100%;
+
+  padding: 13px 14px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 8px;
+
+  outline: none;
+
+  font-size: 14px;
+
+  transition: 0.2s;
+}
+
+.input-group input:focus {
+  border-color: #2f5d50;
+
+  box-shadow: 0 0 0 3px rgba(47, 93, 80, 0.1);
+}
+
+/* Forgot Password */
+
+.forgot {
+  text-align: right;
+
+  margin: -5px 0 20px;
+}
+
+.forgot a {
+  color: #2f5d50;
+
+  font-size: 13px;
+
+  text-decoration: none;
+}
+
+.forgot a:hover {
+  text-decoration: underline;
+}
+
+/* Button */
+
+button {
+  width: 100%;
+
+  padding: 13px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #2f5d50;
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #24493e;
+
+  transform: translateY(-1px);
+}
+
+/* Bottom Text */
+
+.bottom-text {
+  text-align: center;
+
+  margin-top: 25px;
+
+  color: #777;
+
+  font-size: 14px;
+}
+
+.bottom-text a {
+  color: #2f5d50;
+
+  font-weight: 600;
+
+  text-decoration: none;
+}
+
+.bottom-text a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile */
+
+@media (max-width: 500px) {
+  .auth-container {
+    padding: 20px;
+  }
+
+  .auth-box {
+    padding: 30px 22px;
+  }
+
+  .auth-box h1 {
+    font-size: 24px;
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  width: 100%;
+
+  padding: 12px 14px;
+  margin-bottom: 20px;
+
+  background: #fff1f1;
+  border: 1px solid #ffcccc;
+
+  border-radius: 8px;
+
+  color: #d93025;
+
+  font-size: 14px;
+
+  animation: errorShow 0.3s ease;
+}
+
+.error-message span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+
+  background: #d93025;
+  color: white;
+
+  border-radius: 50%;
+
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.error-message p {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Error Animation */
+
+@keyframes errorShow {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

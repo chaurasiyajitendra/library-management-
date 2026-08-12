@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Login - Library</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+  </head>
+
+  <body>
+    <div class="auth-container">
+      <div class="auth-box">
+        <div class="logo">📚</div>
+
+        <h1>Welcome Back</h1>
+
+        <p class="subtitle">Login to access your library</p>
+    
+        {% if error %}
+            <div class="error-message">
+                <span>⚠</span>
+                <p>{{ error }}</p>
+            </div>
+        {% endif %}
+
+        <form method="POST">
+          {% csrf_token %}
+
+          <div class="input-group">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+
+          <div class="input-group">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+
+          <div class="forgot">
+            <a href="#">Forgot Password?</a>
+          </div>
+
+          <button type="submit">Login</button>
+        </form>
+
+        <p class="bottom-text">
+          Don't have an account?
+          <a href="{% url 'register' %}">Register</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

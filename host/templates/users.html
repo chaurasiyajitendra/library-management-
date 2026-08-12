@@ -1,0 +1,177 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Users - BookNest Admin</title>
+
+    <link rel="stylesheet" href="{% static 'css/director/management.css' %}" />
+  </head>
+
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">📚</div>
+
+        <div>
+          <strong>BookNest</strong>
+          <span>Admin Panel</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <span class="nav-label"> MAIN </span>
+
+        <a href="/host/" class="nav-item">
+          <span>▦</span>
+          Dashboard
+        </a>
+
+        <span class="nav-label"> MANAGEMENT </span>
+
+        <a href="/host/books/" class="nav-item">
+          <span>📚</span>
+          Books
+        </a>
+
+        <a href="/host/users/" class="nav-item active">
+          <span>👥</span>
+          Users
+        </a>
+
+        <a href="/host/rentals/" class="nav-item">
+          <span>↗</span>
+          Rentals
+        </a>
+
+        <span class="nav-label"> ACCOUNT </span>
+
+        <a href="/" class="nav-item">
+          <span>🌐</span>
+          View Website
+        </a>
+
+        <a href="/host/logout/" class="nav-item logout">
+          <span>↪</span>
+          Logout
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="page-header">
+        <div>
+          <span class="page-label"> USER MANAGEMENT </span>
+
+          <h1>Users</h1>
+
+          <p>View and manage BookNest members.</p>
+        </div>
+      </header>
+
+      <section class="mini-stats">
+        <div>
+          <span>Total Users</span>
+
+          <strong> {{ users|length }} </strong>
+        </div>
+
+        <div>
+          <span>Active Members</span>
+
+          <strong> {{ users|length }} </strong>
+        </div>
+      </section>
+
+      <section class="table-card">
+        <div class="table-header">
+          <div>
+            <strong> Registered Users </strong>
+
+            <span> All BookNest members </span>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>USER</th>
+
+                <th>EMAIL</th>
+
+                <th>RENTALS</th>
+
+                <th>ACTION</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for user in users %}
+
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-avatar">
+                      {{ user.username|first|upper }}
+                    </div>
+
+                    <div>
+                      <strong> {{ user.name }} </strong>
+
+                      <span> @{{ user.username }} </span>
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  <span class="email"> {{ user.email }} </span>
+                </td>
+
+                <td>
+                  <span class="rental-number"> {{ user.rental_count }} </span>
+                </td>
+
+                <td>
+                  <div class="actions">
+                    <a href="{% url 'user_detail' user.id %}" class="view-btn">
+                      View
+                    </a>
+
+                    <a
+                      href="/host/users/delete/{{ user.id }}/"
+                      class="delete-btn"
+                      onclick="return confirm('Delete this user?');"
+                    >
+                      Delete
+                    </a>
+                  </div>
+                </td>
+              </tr>
+
+              {% empty %}
+
+              <tr>
+                <td colspan="4">
+                  <div class="empty-table">
+                    👥
+
+                    <h3>No users found</h3>
+
+                    <p>Registered users will appear here.</p>
+                  </div>
+                </td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

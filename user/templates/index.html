@@ -1,0 +1,344 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>BookNest - Library</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'css/index.css' %}" />
+  </head>
+
+  <body>
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="/" class="logo">
+          <span>📚</span>
+          BookNest
+        </a>
+
+        <div class="nav-links">
+          <a href="/" class="active"> Home </a>
+
+          <a href="#books"> Books </a>
+
+          <a href="#about"> About </a>
+        </div>
+
+        <div class="nav-user">
+          {% if request.session.user_id %}
+
+          <a href="/profile/" class="profile-link">
+            <span class="user-icon">👤</span>
+            {{ request.session.username }}
+          </a>
+
+          <a href="/logout/" class="logout-btn"> Logout </a>
+
+          {% else %}
+
+          <a href="/login/" class="login-btn"> Login </a>
+
+          <a href="/register/" class="register-btn"> Register </a>
+
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+      <div class="hero-container">
+        <div class="hero-content">
+          <span class="hero-badge"> ✦ Welcome to BookNest </span>
+
+          <h1>
+            Every book has
+            <span>a story.</span>
+          </h1>
+
+          <p>
+            Discover interesting books, explore new ideas and rent your next
+            favorite read from our library.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#books" class="primary-btn">
+              Explore Books
+              <span>→</span>
+            </a>
+
+            {% if not request.session.user_id %}
+
+            <a href="/register/" class="outline-btn"> Join BookNest </a>
+
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Hero Decoration -->
+
+        <div class="hero-art">
+          <div class="circle circle-one"></div>
+
+          <div class="circle circle-two"></div>
+
+          <div class="hero-book">
+            <div class="book-spine"></div>
+
+            <div class="book-content">
+              <span>BOOKNEST</span>
+
+              <div class="book-line"></div>
+
+              <h3>
+                Stories
+                <br />
+                That Stay
+              </h3>
+
+              <small> LIBRARY COLLECTION </small>
+            </div>
+          </div>
+
+          <div class="floating-card card-one">
+            <span>📖</span>
+            <div>
+              <strong>Read</strong>
+              <small>Discover</small>
+            </div>
+          </div>
+
+          <div class="floating-card card-two">
+            <span>✦</span>
+            <div>
+              <strong>Explore</strong>
+              <small>Learn</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= BOOKS ================= -->
+
+    <section class="books-section" id="books">
+      <div class="section-container">
+        <div class="section-header">
+          <div>
+            <span class="section-label"> OUR COLLECTION </span>
+
+            <h2>Find your next book</h2>
+
+            <p>Browse our collection and discover something new.</p>
+          </div>
+
+          <form method="GET" class="search-box" id="search-form">
+            <input
+              type="text"
+              id="search-input"
+              name="q"
+              placeholder="Search books..."
+              autocomplete="off"
+            />
+
+            <button type="submit">🔍</button>
+          </form>
+        </div>
+
+        <!-- Books Grid -->
+        <div id="message-box"></div>
+        <div class="books-grid" id="books-container">
+            {% include "book_list.html" %}
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HOW IT WORKS ================= -->
+
+    <section class="steps-section">
+      <div class="section-container">
+        <div class="steps-heading">
+          <span class="section-label"> SIMPLE & EASY </span>
+
+          <h2>How BookNest works</h2>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step">
+            <div class="step-number">01</div>
+
+            <h3>Discover</h3>
+
+            <p>Browse our collection and find a book that interests you.</p>
+          </div>
+
+          <div class="step">
+            <div class="step-number">02</div>
+
+            <h3>Rent</h3>
+
+            <p>Choose an available book and rent it with a single click.</p>
+          </div>
+
+          <div class="step">
+            <div class="step-number">03</div>
+
+            <h3>Enjoy</h3>
+
+            <p>Read your book and enjoy your reading journey.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ABOUT ================= -->
+
+    <section class="about-section" id="about">
+      <div class="about-container">
+        <div class="about-symbol">📚</div>
+
+        <div class="about-content">
+          <span class="section-label"> ABOUT BOOKNEST </span>
+
+          <h2>A place for curious minds.</h2>
+
+          <p>
+            BookNest is a simple online library where you can discover books,
+            rent them and keep track of your reading journey.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-logo">📚 BookNest</div>
+
+        <p>Read. Discover. Grow.</p>
+
+        <span> © 2026 BookNest Library </span>
+      </div>
+    </footer>
+
+    <script>
+      $(document).ready(function () {
+        /* ================= SEARCH ================= */
+
+        let searchTimer;
+
+        $("#search-input").on("keyup", function () {
+          let query = $(this).val();
+
+          clearTimeout(searchTimer);
+
+          searchTimer = setTimeout(function () {
+            $.ajax({
+              url: "{% url 'search_books' %}",
+
+              type: "GET",
+
+              data: {
+                q: query,
+              },
+
+              success: function (response) {
+                if (response.success) {
+                  $("#books-container").html(response.html);
+                }
+              },
+
+              error: function () {
+                showMessage("Unable to search books.", "error");
+              },
+            });
+          }, 300);
+        });
+
+
+        $("#search-form").submit(function (e) {
+          e.preventDefault();
+        });
+
+
+        $(document).on("click", ".rent-book", function () {
+          let button = $(this);
+
+          let url = button.data("url");
+
+          button.prop("disabled", true).text("Renting...");
+
+          $.ajax({
+            url: url,
+
+            type: "POST",
+
+            data: {
+              csrfmiddlewaretoken: "{{ csrf_token }}",
+            },
+
+            success: function (response) {
+              if (response.login) {
+                showMessage(response.message, "error");
+
+                setTimeout(function () {
+                  window.location.href = "/login/";
+                }, 1200);
+
+                return;
+              }
+
+              if (response.success) {
+                showMessage(response.message, "success");
+
+                button.text("Rented ✓").addClass("disabled");
+
+                button
+                  .closest(".book-card")
+                  .find(".available")
+                  .text("Rented")
+                  .removeClass("available")
+                  .addClass("unavailable");
+              } else {
+                showMessage(response.message, "error");
+
+                button.prop("disabled", false).html("Rent Book <span>→</span>");
+              }
+            },
+
+            error: function () {
+              showMessage("Something went wrong. Please try again.", "error");
+
+              button.prop("disabled", false).html("Rent Book <span>→</span>");
+            },
+          });
+        });
+
+
+        function showMessage(message, type) {
+          let box = $("#message-box");
+
+          box
+            .removeClass("success error")
+            .addClass(type)
+            .text(message)
+            .stop(true, true)
+            .fadeIn(200);
+
+          setTimeout(function () {
+            box.fadeOut(300);
+          }, 3000);
+        }
+      });
+    </script>
+  </body>
+</html>

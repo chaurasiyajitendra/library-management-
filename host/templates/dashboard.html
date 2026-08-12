@@ -1,0 +1,317 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>BookNest - Admin Dashboard</title>
+
+    <link rel="stylesheet" href="{% static 'css/director/dashboard.css' %}" />
+  </head>
+
+  <body>
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">📚</div>
+
+        <div>
+          <strong>BookNest</strong>
+          <span>Admin Panel</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <span class="nav-label"> MAIN </span>
+
+        <a href="/host/" class="nav-item active">
+          <span>▦</span>
+
+          Dashboard
+        </a>
+
+        <span class="nav-label"> MANAGEMENT </span>
+
+        <a href="/host/books/" class="nav-item">
+          <span>📚</span>
+
+          Books
+        </a>
+
+        <a href="/host/users/" class="nav-item">
+          <span>👥</span>
+
+          Users
+        </a>
+
+        <a href="/host/rentals/" class="nav-item">
+          <span>↗</span>
+
+          Rentals
+        </a>
+
+        <span class="nav-label"> ACCOUNT </span>
+
+        <a href="/" class="nav-item">
+          <span>🌐</span>
+
+          View Website
+        </a>
+
+        <a href="/host/logout/" class="nav-item logout">
+          <span>↪</span>
+
+          Logout
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="admin-mini">
+          <div class="admin-avatar">A</div>
+
+          <div>
+            <strong>Administrator</strong>
+
+            <span>BookNest Admin</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+      <!-- HEADER -->
+
+      <header class="topbar">
+        <div>
+          <span class="page-label"> OVERVIEW </span>
+
+          <h1>Dashboard</h1>
+
+          <p>Welcome back. Here's what's happening with your library.</p>
+        </div>
+
+        <div class="topbar-right">
+          <div class="date-box">
+            <span>Today</span>
+
+            <strong> {% now "d M Y" %} </strong>
+          </div>
+
+          <a href="/host/books/add/" class="add-book-btn"> + Add Book </a>
+        </div>
+      </header>
+
+      <!-- ================= STATS ================= -->
+
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon books-icon">📚</div>
+
+          <div class="stat-content">
+            <span>Total Books</span>
+
+            <strong> {{ total_books }} </strong>
+
+            <small> Books in library </small>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon available-icon">✓</div>
+
+          <div class="stat-content">
+            <span>Available Books</span>
+
+            <strong> {{ available_books }} </strong>
+
+            <small> Ready to rent </small>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon rental-icon">↗</div>
+
+          <div class="stat-content">
+            <span>Active Rentals</span>
+
+            <strong> {{ active_rentals }} </strong>
+
+            <small> Currently rented </small>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon users-icon">👥</div>
+
+          <div class="stat-content">
+            <span>Total Users</span>
+
+            <strong> {{ total_users }} </strong>
+
+            <small> Registered members </small>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CONTENT GRID ================= -->
+
+      <section class="dashboard-grid">
+        <!-- RECENT BOOKS -->
+
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <span class="panel-label"> LIBRARY </span>
+
+              <h2>Recent Books</h2>
+            </div>
+
+            <a href="/host/books/"> View all → </a>
+          </div>
+
+          <div class="book-list">
+            {% for book in books %}
+
+            <div class="book-row">
+              <div class="book-cover">{{ book.name|first|upper }}</div>
+
+              <div class="book-details">
+                <strong> {{ book.name }} </strong>
+
+                <span> By {{ book.author }} </span>
+              </div>
+
+              {% if book.available %}
+
+              <span class="status available"> Available </span>
+
+              {% else %}
+
+              <span class="status rented"> Rented </span>
+
+              {% endif %}
+            </div>
+
+            {% empty %}
+
+            <div class="empty-row">No books added yet.</div>
+
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- RECENT RENTALS -->
+
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <span class="panel-label"> ACTIVITY </span>
+
+              <h2>Recent Rentals</h2>
+            </div>
+
+            <a href="/host/rentals/"> View all → </a>
+          </div>
+
+          <div class="rental-list">
+            {% for rental in rentals %}
+
+            <div class="rental-row">
+              <div class="user-avatar">
+                {{ rental.user.username|first|upper }}
+              </div>
+
+              <div class="rental-details">
+                <strong> {{ rental.user.username }} </strong>
+
+                <span> {{ rental.book.name }} </span>
+              </div>
+
+              {% if rental.returned %}
+
+              <span class="status returned"> Returned </span>
+
+              {% else %}
+
+              <span class="status active"> Active </span>
+
+              {% endif %}
+            </div>
+
+            {% empty %}
+
+            <div class="empty-row">No rentals yet.</div>
+
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= QUICK ACTIONS ================= -->
+
+      <section class="quick-section">
+        <div class="section-title">
+          <span class="panel-label"> QUICK ACTIONS </span>
+
+          <h2>Manage BookNest</h2>
+        </div>
+
+        <div class="quick-grid">
+          <a href="/host/books/add/" class="quick-card">
+            <div class="quick-icon">+</div>
+
+            <div>
+              <strong> Add New Book </strong>
+
+              <span> Add a book to your collection </span>
+            </div>
+
+            <b>→</b>
+          </a>
+
+          <a href="/host/books/" class="quick-card">
+            <div class="quick-icon">📚</div>
+
+            <div>
+              <strong> Manage Books </strong>
+
+              <span> Edit or remove books </span>
+            </div>
+
+            <b>→</b>
+          </a>
+
+          <a href="/host/users/" class="quick-card">
+            <div class="quick-icon">👥</div>
+
+            <div>
+              <strong> Manage Users </strong>
+
+              <span> View registered members </span>
+            </div>
+
+            <b>→</b>
+          </a>
+
+          <a href="/host/rentals/" class="quick-card">
+            <div class="quick-icon">↗</div>
+
+            <div>
+              <strong> View Rentals </strong>
+
+              <span> Track book rentals </span>
+            </div>
+
+            <b>→</b>
+          </a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

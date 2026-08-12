@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Register - Library</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+  </head>
+
+  <body>
+    <div class="auth-container">
+      <div class="auth-box">
+        <div class="logo">📚</div>
+
+        <h1>Create Account</h1>
+
+        <p class="subtitle">Join our library today</p>
+
+        {% if error %}
+            <div class="error-message">
+                <span>⚠</span>
+                <p>{{ error }}</p>
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'register' %}">
+          {% csrf_token %}
+
+          <div class="input-group">
+            <label>Full Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your name"
+              required
+            />
+          </div>
+
+          <div class="input-group">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+
+          <div class="input-group">
+            <label>Username</label>
+            <input
+              type="text"
+              name="username"
+              placeholder="Choose a username"
+              required
+            />
+          </div>
+
+          <div class="input-group">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Create a password"
+              required
+            />
+          </div>
+
+          <button type="submit">Create Account</button>
+        </form>
+
+        <p class="bottom-text">
+          Already have an account?
+          <a href="{% url 'login' %}">Login</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

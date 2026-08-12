@@ -1,0 +1,359 @@
+{% load static %}
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{{ user.username }} - BookNest Admin</title>
+
+    <link rel="stylesheet" href="{% static 'css/director/management.css' %}" />
+
+    <style>
+      .profile-layout {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 20px;
+      }
+
+      .profile-card {
+        background: white;
+        border: 1px solid #e4e8e5;
+        border-radius: 13px;
+        padding: 30px;
+        text-align: center;
+        height: fit-content;
+      }
+
+      .profile-avatar {
+        width: 75px;
+        height: 75px;
+        margin: 0 auto 15px;
+
+        border-radius: 50%;
+
+        background: #e8f0ea;
+        color: #315844;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 25px;
+        font-weight: 700;
+      }
+
+      .profile-card h2 {
+        color: #294437;
+        font-size: 20px;
+        margin-bottom: 5px;
+      }
+
+      .username {
+        color: #8b9690;
+        font-size: 11px;
+        margin-bottom: 25px;
+      }
+
+      .info-item {
+        text-align: left;
+        padding: 13px 0;
+        border-top: 1px solid #edf0ed;
+      }
+
+      .info-item span {
+        display: block;
+        color: #8a958f;
+        font-size: 9px;
+        margin-bottom: 4px;
+      }
+
+      .info-item strong {
+        color: #405349;
+        font-size: 11px;
+        word-break: break-word;
+      }
+
+      .back-btn {
+        display: inline-block;
+        margin-bottom: 18px;
+
+        text-decoration: none;
+
+        color: #527060;
+        background: #edf3ef;
+
+        padding: 9px 13px;
+
+        border-radius: 7px;
+
+        font-size: 10px;
+        font-weight: 600;
+      }
+
+      .rental-card {
+        background: white;
+        border: 1px solid #e4e8e5;
+        border-radius: 13px;
+        overflow: hidden;
+      }
+
+      .rental-header {
+        padding: 20px;
+        border-bottom: 1px solid #edf0ed;
+      }
+
+      .rental-header h2 {
+        color: #30443a;
+        font-size: 15px;
+      }
+
+      .rental-header p {
+        color: #929b96;
+        font-size: 10px;
+        margin-top: 4px;
+      }
+
+      .rental-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 15px;
+
+        padding: 17px 20px;
+
+        border-bottom: 1px solid #f0f2f0;
+      }
+
+      .rental-item:last-child {
+        border-bottom: none;
+      }
+
+      .rental-book {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .rental-icon {
+        width: 40px;
+        height: 46px;
+
+        border-radius: 5px;
+
+        background: #edf3ef;
+        border-left: 3px solid #315844;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 17px;
+      }
+
+      .rental-book strong {
+        display: block;
+        color: #354940;
+        font-size: 11px;
+      }
+
+      .rental-book span {
+        display: block;
+        color: #929b96;
+        font-size: 9px;
+        margin-top: 4px;
+      }
+
+      .rental-date {
+        color: #7d8882;
+        font-size: 9px;
+      }
+
+      .empty-rentals {
+        text-align: center;
+        padding: 55px 20px;
+      }
+
+      .empty-rentals div {
+        font-size: 30px;
+      }
+
+      .empty-rentals h3 {
+        color: #405349;
+        font-size: 14px;
+        margin: 10px 0 5px;
+      }
+
+      .empty-rentals p {
+        color: #929b96;
+        font-size: 10px;
+      }
+
+      @media (max-width: 800px) {
+        .profile-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+
+  </head>
+
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">📚</div>
+
+        <div>
+          <strong>BookNest</strong>
+          <span>Admin Panel</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <span class="nav-label"> MAIN </span>
+
+        <a href="/host/" class="nav-item">
+          <span>▦</span>
+          Dashboard
+        </a>
+
+        <span class="nav-label"> MANAGEMENT </span>
+
+        <a href="/host/books/" class="nav-item">
+          <span>📚</span>
+          Books
+        </a>
+
+        <a href="/host/users/" class="nav-item active">
+          <span>👥</span>
+          Users
+        </a>
+
+        <a href="/host/rentals/" class="nav-item">
+          <span>↗</span>
+          Rentals
+        </a>
+
+        <span class="nav-label"> ACCOUNT </span>
+
+        <a href="/" class="nav-item">
+          <span>🌐</span>
+          Website
+        </a>
+
+        <a href="/host/logout/" class="nav-item logout">
+          <span>↪</span>
+          Logout
+        </a>
+      </nav>
+      ```
+    </aside>
+
+    <main class="main">
+
+      <a href="/host/users" class="back-btn"> ← Back to Users </a>
+
+      <header class="page-header">
+        <div>
+          <span class="page-label"> USER DETAILS </span>
+
+          <h1>{{ user.name }}</h1>
+
+          <p>View user information and rental history.</p>
+        </div>
+      </header>
+
+      <div class="profile-layout">
+        <!-- USER INFO -->
+
+        <section class="profile-card">
+          <div class="profile-avatar">{{ user.username|first|upper }}</div>
+
+          <h2>{{ user.name }}</h2>
+
+          <p class="username">@{{ user.username }}</p>
+
+          <div class="info-item">
+            <span> FULL NAME </span>
+
+            <strong> {{ user.name }} </strong>
+          </div>
+
+          <div class="info-item">
+            <span> USERNAME </span>
+
+            <strong> @{{ user.username }} </strong>
+          </div>
+
+          <div class="info-item">
+            <span> EMAIL </span>
+
+            <strong> {{ user.email }} </strong>
+          </div>
+
+          <div class="info-item">
+            <span> TOTAL RENTALS </span>
+
+            <strong> {{ rentals|length }} </strong>
+          </div>
+        </section>
+
+        <!-- RENTALS -->
+
+        <section class="rental-card">
+          <div class="rental-header">
+            <h2>Rental History</h2>
+
+            <p>Books rented by this user.</p>
+          </div>
+
+          {% for rental in rentals %}
+
+          <div class="rental-item">
+            <div class="rental-book">
+              <div class="rental-icon">📖</div>
+
+              <div>
+                <strong> {{ rental.book.name }} </strong>
+
+                <span> By {{ rental.book.author }} </span>
+              </div>
+            </div>
+
+            <div>
+              <span class="rental-date">
+                {{ rental.rented_at|date:"d M Y" }}
+              </span>
+
+              {% if rental.returned %}
+
+              <span class="status returned"> Returned </span>
+
+              {% else %}
+
+              <span class="status active"> Active </span>
+
+              {% endif %}
+            </div>
+          </div>
+
+          {% empty %}
+
+          <div class="empty-rentals">
+            <div>📚</div>
+
+            <h3>No rental history</h3>
+
+            <p>This user hasn't rented any books yet.</p>
+          </div>
+
+          {% endfor %}
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

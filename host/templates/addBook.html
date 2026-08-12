@@ -1,0 +1,309 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{{ form_title }} - BookNest</title>
+
+    <link rel="stylesheet" href="{% static 'css/director/management.css' %}" />
+
+    <style>
+      .form-card {
+        max-width: 650px;
+
+        background: white;
+
+        border: 1px solid #e4e8e5;
+
+        border-radius: 13px;
+
+        padding: 28px;
+      }
+
+      .form-group {
+        margin-bottom: 19px;
+      }
+
+      .form-group label {
+        display: block;
+
+        margin-bottom: 7px;
+
+        color: #53635b;
+
+        font-size: 10px;
+
+        font-weight: 700;
+
+        letter-spacing: 0.5px;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+
+        border: 1px solid #dfe5e1;
+
+        border-radius: 8px;
+
+        outline: none;
+
+        padding: 11px 13px;
+
+        font-family: inherit;
+
+        font-size: 12px;
+
+        color: #34483e;
+
+        transition: 0.2s;
+      }
+
+      .form-group input {
+        height: 42px;
+      }
+
+      .form-group textarea {
+        min-height: 130px;
+
+        resize: vertical;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        border-color: #5b806c;
+
+        box-shadow: 0 0 0 3px rgba(91, 128, 108, 0.08);
+      }
+
+      .error-message {
+        background: #faeeee;
+
+        border: 1px solid #f0d5d5;
+
+        color: #a34d4d;
+
+        padding: 11px 13px;
+
+        border-radius: 7px;
+
+        font-size: 11px;
+
+        margin-bottom: 18px;
+      }
+
+      .form-actions {
+        display: flex;
+
+        align-items: center;
+
+        gap: 9px;
+
+        margin-top: 25px;
+      }
+
+      .save-btn {
+        border: none;
+
+        background: #294f3e;
+
+        color: white;
+
+        padding: 11px 18px;
+
+        border-radius: 7px;
+
+        cursor: pointer;
+
+        font-family: inherit;
+
+        font-size: 11px;
+
+        font-weight: 600;
+      }
+
+      .save-btn:hover {
+        background: #1f3e30;
+      }
+
+      .cancel-btn {
+        text-decoration: none;
+
+        background: #edf1ee;
+
+        color: #596a61;
+
+        padding: 11px 17px;
+
+        border-radius: 7px;
+
+        font-size: 11px;
+
+        font-weight: 600;
+      }
+
+      .cancel-btn:hover {
+        background: #e2e8e4;
+      }
+
+      .form-top {
+        margin-bottom: 25px;
+      }
+
+      .form-top h2 {
+        color: #30443a;
+
+        font-size: 17px;
+
+        margin-bottom: 5px;
+      }
+
+      .form-top p {
+        color: #929b96;
+
+        font-size: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">📚</div>
+
+        <div>
+          <strong>BookNest</strong>
+
+          <span> Admin Panel </span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <span class="nav-label"> MAIN </span>
+
+        <a href="/host/" class="nav-item">
+          <span>▦</span>
+          Dashboard
+        </a>
+
+        <span class="nav-label"> MANAGEMENT </span>
+
+        <a href="/host/books/" class="nav-item active">
+          <span>📚</span>
+          Books
+        </a>
+
+        <a href="/host/users/" class="nav-item">
+          <span>👥</span>
+          Users
+        </a>
+
+        <a href="/host/rentals/" class="nav-item">
+          <span>↗</span>
+          Rentals
+        </a>
+
+        <span class="nav-label"> ACCOUNT </span>
+
+        <a href="/" class="nav-item">
+          <span>🌐</span>
+          Website
+        </a>
+
+        <a href="/host/logout/" class="nav-item logout">
+          <span>↪</span>
+          Logout
+        </a>
+      </nav>
+    </aside>
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+      <a href="/host/books/" class="back-btn"> ← Back to Books </a>
+
+      <header class="page-header">
+        <div>
+          <span class="page-label"> LIBRARY MANAGEMENT </span>
+
+          <h1>{{ form_title }}</h1>
+
+          <p>Add or update a book in your library.</p>
+        </div>
+      </header>
+
+      <section class="form-card">
+        <div class="form-top">
+          <h2>Book Information</h2>
+
+          <p>Enter the details of the book below.</p>
+        </div>
+
+        {% if error %}
+
+        <div class="error-message">{{ error }}</div>
+
+        {% endif %}
+
+        <form method="POST">
+          {% csrf_token %}
+
+          <!-- NAME -->
+
+          <div class="form-group">
+            <label> BOOK NAME </label>
+
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter book name"
+              value="{{ book.name|default:'' }}"
+            />
+          </div>
+
+          <!-- AUTHOR -->
+
+          <div class="form-group">
+            <label> AUTHOR </label>
+
+            <input
+              type="text"
+              name="author"
+              placeholder="Enter author name"
+              value="{{ book.author|default:'' }}"
+            />
+          </div>
+
+          <!-- DESCRIPTION -->
+
+          <div class="form-group">
+            <label> DESCRIPTION </label>
+
+            <textarea
+              name="description"
+              placeholder="Write a short description..."
+            >
+            {{ book.description|default:'' }}</textarea
+            >
+          </div>
+
+          <!-- BUTTONS -->
+
+          <div class="form-actions">
+            <button type="submit" class="save-btn">
+              {% if book %} Update Book {% else %} Add Book {% endif %}
+            </button>
+
+            <a href="/host/books/" class="cancel-btn"> Cancel </a>
+          </div>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

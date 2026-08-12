@@ -1,0 +1,259 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{{ user.username }} - BookNest</title>
+
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}" />
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </head>
+
+  <body>
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="/" class="logo">
+          <span>📚</span>
+          BookNest
+        </a>
+
+        <div class="nav-links">
+          <a href="/"> Home </a>
+
+          <a href="/#books"> Books </a>
+
+          <a href="/profile/" class="active"> Profile </a>
+
+          <a href="/logout/" class="logout"> Logout </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ================= MESSAGE ================= -->
+
+    <div id="message-box"></div>
+
+    <!-- ================= PROFILE ================= -->
+
+    <main class="profile-container">
+      <!-- PROFILE HEADER -->
+
+      <section class="profile-card">
+        <div class="profile-left">
+          <div class="profile-avatar">{{ user.username|first|upper }}</div>
+
+          <div class="profile-info">
+            <span class="profile-label"> BOOKNEST MEMBER </span>
+
+            <h1>{{ user.name }}</h1>
+
+            <p class="username">@{{ user.username }}</p>
+
+            <p class="email">{{ user.email }}</p>
+          </div>
+        </div>
+
+        <div class="profile-stats">
+          <div class="stat">
+            <strong> {{ rentals|length }} </strong>
+
+            <span> Total Rentals </span>
+          </div>
+
+          <div class="stat-divider"></div>
+
+          <div class="stat">
+            <strong>
+              {% for rental in rentals %} {% if not rental.returned %} 1 
+              {%endif %} {% empty %} 0 {% endfor %}
+            </strong>
+
+            <span> Active </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= RENTED BOOKS ================= -->
+
+      <section class="library-section">
+        <div class="section-heading">
+          <div>
+            <span class="section-label"> MY LIBRARY </span>
+
+            <h2>Your Rented Books</h2>
+
+            <p>Books you've picked up for your reading journey.</p>
+          </div>
+
+          <a href="/#books" class="browse-btn">
+            Browse Books
+            <span>→</span>
+          </a>
+        </div>
+
+        <div class="rental-grid" id="rental-container">
+          {% for rental in rentals %}
+
+          <article class="rental-card" id="rental-{{ rental.id }}">
+            <div class="book-top">
+              <div class="book-symbol">{{ rental.book.name|first|upper }}</div>
+
+              {% if rental.returned %}
+
+              <span class="status returned"> Returned </span>
+
+              {% else %}
+
+              <span class="status active"> Active </span>
+
+              {% endif %}
+            </div>
+
+            <div class="rental-content">
+              <span class="book-type"> BOOK </span>
+
+              <h3>{{ rental.book.name }}</h3>
+
+              <p class="author">By {{ rental.book.author }}</p>
+
+              <p class="book-description">
+                {{ rental.book.description|truncatewords:18 }}
+              </p>
+            </div>
+
+            <div class="rental-footer">
+              <div class="rental-date">
+                <span> Rented </span>
+
+                <strong> {{ rental.rented_at|date:"d M Y" }} </strong>
+              </div>
+
+              {% if rental.returned %}
+
+              <span class="returned-text"> ✓ Returned </span>
+
+              {% else %}
+
+              <button
+                type="button"
+                class="return-btn"
+                data-url="{% url 'return_book' rental.id %}"
+                data-id="{{ rental.id }}"
+              >
+                Return Book
+                <span>↗</span>
+              </button>
+
+              {% endif %}
+            </div>
+          </article>
+
+          {% empty %}
+
+          <div class="empty-rentals">
+            <div class="empty-icon">📚</div>
+
+            <h3>Your library is empty</h3>
+
+            <p>
+              You haven't rented any books yet. Discover something interesting
+              to read.
+            </p>
+
+            <a href="/#books"> Explore Books → </a>
+          </div>
+
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-logo">📚 BookNest</div>
+
+        <p>Read. Discover. Grow.</p>
+
+        <span> © 2026 BookNest Library </span>
+      </div>
+    </footer>
+
+    <script>
+      $(document).ready(function () {
+        $(document).on("click", ".return-btn", function () {
+          let button = $(this);
+
+          let url = button.data("url");
+
+          let rentalId = button.data("id");
+
+          button.prop("disabled", true).text("Returning...");
+
+          $.ajax({
+            url: url,
+
+            type: "POST",
+
+            data: {
+              csrfmiddlewaretoken: "{{ csrf_token }}",
+            },
+
+            success: function (response) {
+              if (response.success) {
+                showMessage(response.message, "success");
+
+                let card = $("#rental-" + rentalId);
+
+                card
+                  .find(".status")
+                  .removeClass("active")
+                  .addClass("returned")
+                  .text("Returned");
+
+                button.replaceWith(
+                  '<span class="returned-text">✓ Returned</span>',
+                );
+              } else {
+                showMessage(response.message, "error");
+
+                button
+                  .prop("disabled", false)
+                  .html("Return Book <span>↗</span>");
+              }
+            },
+
+            error: function () {
+              showMessage("Unable to return the book.", "error");
+
+              button.prop("disabled", false).html("Return Book <span>↗</span>");
+            },
+          });
+        });
+
+        function showMessage(message, type) {
+          let box = $("#message-box");
+
+          box
+            .removeClass("success error")
+            .addClass(type)
+            .text(message)
+            .stop(true, true)
+            .fadeIn(200);
+
+          setTimeout(function () {
+            box.fadeOut(300);
+          }, 3000);
+        }
+      });
+    </script>
+  </body>
+</html>

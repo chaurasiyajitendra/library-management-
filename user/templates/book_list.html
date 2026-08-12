@@ -1,0 +1,58 @@
+{% for book in books %}
+
+<article class="book-card">
+  <div class="card-header">
+    <div class="book-letter">{{ book.name|first|upper }}</div>
+
+    {% if book.available %}
+
+    <span class="available"> Available </span>
+
+    {% else %}
+
+    <span class="unavailable"> Unavailable </span>
+
+    {% endif %}
+  </div>
+
+  <div class="book-details">
+    <h3>{{ book.name }}</h3>
+
+    <p class="author">By {{ book.author }}</p>
+
+    <p class="description">{{ book.description }}</p>
+  </div>
+
+  <div class="card-footer">
+    {% if book.available %}
+
+    <button
+      type="button"
+      class="rent-btn rent-book"
+      data-url="{% url 'rent_book' book.id %}"
+    >
+      Rent Book
+      <span>→</span>
+    </button>
+
+    {% else %}
+
+    <button type="button" class="rent-btn disabled" disabled>
+      Currently Unavailable
+    </button>
+
+    {% endif %}
+  </div>
+</article>
+
+{% empty %}
+
+<div class="empty-state">
+  <div class="empty-icon">📚</div>
+
+  <h3>No books found</h3>
+
+  <p>We couldn't find any books matching your search.</p>
+</div>
+
+{% endfor %}

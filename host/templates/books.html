@@ -1,0 +1,183 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Books - BookNest Admin</title>
+
+    <link rel="stylesheet" href="{% static 'css/director/management.css' %}" />
+  </head>
+
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">📚</div>
+
+        <div>
+          <strong>BookNest</strong>
+          <span>Admin Panel</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <span class="nav-label">MAIN</span>
+
+        <a href="/" class="nav-item">
+          <span>▦</span>
+          Dashboard
+        </a>
+
+        <span class="nav-label">MANAGEMENT</span>
+
+        <a href="/host/books/" class="nav-item active">
+          <span>📚</span>
+          Books
+        </a>
+
+        <a href="/host/users/" class="nav-item">
+          <span>👥</span>
+          Users
+        </a>
+
+        <a href="/host/rentals/" class="nav-item">
+          <span>↗</span>
+          Rentals
+        </a>
+
+        <span class="nav-label">ACCOUNT</span>
+
+        <a href="/" class="nav-item">
+          <span>🌐</span>
+          View Website
+        </a>
+
+        <a href="/host/logout/" class="nav-item logout">
+          <span>↪</span>
+          Logout
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="page-header">
+        <div>
+          <span class="page-label">LIBRARY MANAGEMENT</span>
+
+          <h1>Books</h1>
+
+          <p>Manage all books available in your library.</p>
+        </div>
+
+        <a href="/host/books/add/" class="primary-btn"> + Add Book </a>
+      </header>
+
+      <section class="toolbar">
+        <div class="search-box">
+          <span>⌕</span>
+
+          <input type="text" placeholder="Search books..." />
+        </div>
+
+        <select>
+          <option>All Books</option>
+          <option>Available</option>
+          <option>Rented</option>
+        </select>
+      </section>
+
+      <section class="table-card">
+        <div class="table-header">
+          <div>
+            <strong>Book Collection</strong>
+
+            <span> {{ books|length }} books </span>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>BOOK</th>
+                <th>AUTHOR</th>
+                <th>STATUS</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for book in books %}
+
+              <tr>
+                <td>
+                  <div class="book-cell">
+                    <div class="book-avatar">{{ book.name|first|upper }}</div>
+
+                    <div>
+                      <strong> {{ book.name }} </strong>
+
+                      <span> ID #{{ book.id }} </span>
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  <span class="author"> {{ book.author }} </span>
+                </td>
+
+                <td>
+                  {% if book.available %}
+
+                  <span class="status available"> Available </span>
+
+                  {% else %}
+
+                  <span class="status rented"> Rented </span>
+
+                  {% endif %}
+                </td>
+
+                <td>
+                  <div class="actions">
+                    <a
+                      href="/host/books/edit/{{ book.id }}/"
+                      class="edit-btn"
+                    >
+                      Edit
+                    </a>
+
+                    <a
+                      href="/host/books/delete/{{ book.id }}/"
+                      class="delete-btn"
+                      onclick="return confirm('Delete this book?');"
+                    >
+                      Delete
+                    </a>
+                  </div>
+                </td>
+              </tr>
+
+              {% empty %}
+
+              <tr>
+                <td colspan="4">
+                  <div class="empty-table">
+                    📚
+                    <h3>No books found</h3>
+                    <p>Add your first book to the library.</p>
+                  </div>
+                </td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
